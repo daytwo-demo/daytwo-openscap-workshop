@@ -1,0 +1,12 @@
+# regla<TAB>motivo
+# Las reglas de esta lista se quitan del perfil CIS L1. Cada una con su motivo.
+# Si una regla no existe en tu datastream, el script la omite y avisa.
+partition_for_tmp	/tmp separado se define en la instalación, no en caliente
+grub2_password		configurar password de GRUB puede dejar sin acceso a la consola
+sshd_limit_user_access	falta decidir qué grupo puede entrar (AllowGroups)
+ensure_journald_and_rsyslog_not_active_together	hay que elegir journald o rsyslog
+service_systemd-journal-upload_enabled	no hay colector remoto de logs
+ensure_root_password_configured	root bloqueado + sudo es una política válida
+no_files_or_dirs_ungroupowned	requiere revisar archivos y asignar grupo a mano
+no_files_or_dirs_unowned_by_user	requiere revisar archivos y asignar dueño a mano
+accounts_password_last_change_is_in_past	las cuentas son nuevas; se ajusta con chage

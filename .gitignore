@@ -1,0 +1,5 @@
+# salidas del workshop (no se versionan)
+out/
+*.xml
+*.html
+*.log
