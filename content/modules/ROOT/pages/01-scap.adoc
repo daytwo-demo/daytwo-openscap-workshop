@@ -1,0 +1,49 @@
+= SCAP
+:navtitle: SCAP
+
+SCAP · Para entender el formato que hay debajo de todo · Al terminar: sabes qué
+es un datastream y por qué no se edita.
+
+SCAP es un conjunto de estándares para escribir políticas de seguridad y
+medirlas de forma que distintas herramientas entiendan lo mismo. No es un
+producto: es un formato, como PDF.
+
+== La analogía del examen
+
+[mermaid]
+----
+flowchart LR
+  X["XCCDF<br/>el examen"] --> DS["Datastream<br/>un solo XML"]
+  O["OVAL<br/>las preguntas"] --> DS
+  DS --> S["oscap"]
+  S --> R["ARF<br/>la hoja corregida"]
+----
+
+El examen dice qué se pregunta. Las preguntas dicen cómo se corrigen. La hoja
+guarda el resultado.
+
+== Las tres piezas
+
+. *XCCDF*: el checklist. Qué se exige y cómo se agrupa en perfiles.
+. *OVAL*: el chequeo. Cómo se mide cada requisito.
+. *ARF*: el resultado de una evaluación.
+
+Un *datastream* es un solo archivo XML que empaqueta las tres. En RHEL se llama
+`ssg-rhel10-ds.xml` o `ssg-rhel9-ds.xml`.
+
+== Qué no es SCAP
+
+. No es un escáner: es el formato que el escáner lee.
+. No es un benchmark: CIS es el documento; SCAP es cómo se expresa.
+. No arregla nada: solo describe qué medir y cómo.
+
+== El error más común
+
+Decir "SCAP" cuando se quiere decir "OpenSCAP". SCAP es el formato; OpenSCAP es
+el programa que lo lee. Es como confundir PDF con el visor de PDF.
+
+[.checkpoint]
+== Checkpoint
+
+Deberías poder decir, sin mirar: SCAP es el formato, XCCDF dice qué, OVAL dice
+cómo, ARF dice qué salió, y el datastream es los tres en un archivo.

@@ -1,0 +1,44 @@
+= Glosario
+:navtitle: Glosario
+
+Glosario · Para volver cuando aparezca una sigla · Al terminar: no te trabas con
+el vocabulario.
+
+== El formato
+
+. *SCAP*: el conjunto de estándares.
+. *XCCDF*: el checklist.
+. *OVAL*: el chequeo.
+. *ARF*: el resultado.
+. *Datastream*: los tres en un XML.
+
+== El contenido
+
+. *Perfil*: selección de reglas y valores.
+. *Regla*: una verificación concreta.
+. *Tailoring*: perfil derivado, en un archivo aparte.
+. *Fix*: el código que corrige una regla.
+. *CCE*: identificador común de una recomendación.
+
+== CIS
+
+. *CIS*: la organización que publica los benchmarks.
+. *WorkBench*: el sitio oficial: https://workbench.cisecurity.org/
+. *Nivel 1*: lo esencial, para todos.
+. *Nivel 2*: defensa en profundidad, para alto valor.
+. *Manual*: control que se revisa a mano, sin regla.
+
+== El reporte
+
+. *pass*: cumple.
+. *fail*: no cumple.
+. *notapplicable*: no aplica.
+. *notselected*: fuera del perfil o excluido.
+. *error / unknown*: no se pudo decidir.
+
+== Las herramientas
+
+. *OpenSCAP*: el motor y el comando `oscap`.
+. *Satellite*: centraliza políticas y reportes.
+. *REX*: ejecución remota de Satellite.
+. *SCE*: chequeos con scripts, con motor aparte.

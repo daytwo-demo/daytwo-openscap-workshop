@@ -3,3 +3,7 @@ out/
 *.xml
 *.html
 *.log
+
+# Showroom
+www/
+node_modules/

@@ -1,0 +1,48 @@
+= OpenSCAP y CIS Workshop
+:navtitle: Inicio
+
+OpenSCAP y CIS · Para quien heredó "hay que pasar CIS" · Al terminar: escanear, ajustar y remediar un RHEL.
+
+Si te dijeron "hay que pasar CIS nivel 1" y no supiste por dónde empezar, este
+workshop es para ti. No necesitas saber SCAP ni haber tocado OpenSCAP.
+
+== Qué vas a saber al terminar
+
+. La diferencia entre SCAP, OpenSCAP y CIS.
+. Leer un control en el CIS WorkBench y saber qué significa pasarlo.
+. Escanear un RHEL contra CIS nivel 1.
+. Quitar los controles que no aplican sin tocar el contenido de Red Hat.
+. Llevar el mismo flujo a Satellite.
+
+== El camino
+
+[mermaid]
+----
+flowchart LR
+  C["Documento CIS"] --> D["Datastream"]
+  D --> S["Escaneo"]
+  S --> R["Reporte"]
+  R --> F["Ajuste y fix"]
+  F --> S
+----
+
+Ese dibujo es todo el workshop. Los capítulos explican cada flecha; los
+laboratorios la recorren.
+
+== Cómo empezar
+
+. Lee los tres capítulos de conceptos. No hay comandos.
+. Haz los cuatro laboratorios en una VM desechable.
+. Guarda el reporte final: es la evidencia.
+
+[WARNING]
+====
+La remediación toca `sshd`, PAM y `sudo`. Usa una VM con snapshot y trabaja desde
+la consola, no por SSH.
+====
+
+== Lo que no es
+
+No es un curso de CIS ni reemplaza el benchmark oficial. Los controles se leen
+en el CIS WorkBench. Acá se explica cómo medirlos, cómo ajustar la medición y qué
+significa el resultado.

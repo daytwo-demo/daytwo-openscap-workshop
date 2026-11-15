@@ -1,0 +1,74 @@
+= Lab 2: tailoring
+:navtitle: Lab 2: tailoring
+
+Ajustar · Para quitar lo que no aplica sin tocar el datastream · Al terminar:
+tienes un perfil derivado y menos fallas.
+
+[mermaid]
+----
+flowchart LR
+  D["Datastream<br/>no se toca"] --> T["Tailoring"]
+  T --> P["Perfil derivado"]
+  P --> S["Escaneo"]
+----
+
+El ajuste es como fotocopiar el examen y tachar preguntas: el original queda
+intacto.
+
+== 1. Generar el ajuste
+
+[source,bash]
+----
+./scripts/03-tailoring.sh
+----
+
+Lee `tailoring/excepciones.tsv`, valida cada regla contra el datastream y genera
+`/tmp/openscap-workshop/tailoring.xml`.
+
+== 2. Ver el perfil que quedó
+
+[source,bash]
+----
+oscap info /tmp/openscap-workshop/tailoring.xml | sed -n '/Profiles:/,+3p'
+----
+
+Aparece un perfil terminado en `_customized`. Ese es el que se usa.
+
+[WARNING]
+====
+Si escaneas con el perfil base y le pasas el ajuste, el ajuste no se aplica. El
+perfil del ajuste es otro.
+====
+
+== 3. Escanear con el ajuste
+
+[source,bash]
+----
+ID=$(cat /tmp/openscap-workshop/perfil-tailoring.txt)
+
+sudo oscap xccdf eval \
+  --profile "$ID" \
+  --tailoring-file /tmp/openscap-workshop/tailoring.xml \
+  --results /tmp/openscap-workshop/con-ajuste.xml \
+  --report /tmp/openscap-workshop/con-ajuste.html \
+  /usr/share/xml/scap/ssg/content/ssg-rhel10-ds.xml
+----
+
+== 4. Comparar
+
+[source,bash]
+----
+for f in base con-ajuste; do
+  echo "== $f"
+  grep -o 'result>[a-z]*<' /tmp/openscap-workshop/$f.xml | sort | uniq -c
+done
+----
+
+Las reglas excluidas pasan de `fail` a `notselected`. No se arreglaron: se
+declararon fuera de alcance.
+
+[.checkpoint]
+== Checkpoint
+
+Tienes que ver menos `fail` y más `notselected` que en el scan base. Cada
+exclusión debe tener un motivo en el TSV.

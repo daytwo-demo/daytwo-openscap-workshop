@@ -4,6 +4,20 @@ Workshop práctico para entender cómo se **mide** y se **ajusta** una línea ba
 CIS con las herramientas que ya vienen en RHEL. Sin Satellite, sin fork y sin
 escribir XML a mano.
 
+## Ver el workshop
+
+El contenido está publicado como sitio Showroom:
+
+https://daytwo-internal.github.io/daytwo-openscap-workshop/
+
+Para construirlo localmente:
+
+```bash
+npm install
+npx antora site.yml
+# abrir www/index.html
+```
+
 Al terminar vas a haber hecho, de punta a punta:
 
 1. escaneado un RHEL contra CIS nivel 1 servidor,
@@ -297,6 +311,8 @@ Este workshop se queda en **quitar** controles. Las siguientes etapas:
 ```
 .
 ├── README.md
+├── site.yml                 # configuración de Antora
+├── content/                 # páginas del sitio Showroom
 ├── docs/
 │   └── satellite.md         # escaneo y mitigación desde Satellite
 ├── scripts/

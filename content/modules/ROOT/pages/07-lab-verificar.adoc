@@ -1,0 +1,61 @@
+= Lab 4: verificar
+:navtitle: Lab 4: verificar
+
+Verificar · Para demostrar que el fix funcionó · Al terminar: tienes un reporte
+en cero fallas.
+
+[mermaid]
+----
+flowchart LR
+  F["Fix aplicado"] --> S["Escanear"] --> R{"¿0 fail?"}
+  R -- "No" --> I["Investigar"] --> F
+  R -- "Sí" --> E["Evidencia"]
+----
+
+== 1. Escanear
+
+[source,bash]
+----
+sudo ./scripts/05-verificar.sh
+----
+
+== 2. Leer el conteo
+
+Debe dar:
+
+----
+284 pass
+0 fail
+31 notapplicable
+758 notselected
+----
+
+Las excepciones aparecen como `notselected`.
+
+== 3. Comparar los tres reportes
+
+[source,bash]
+----
+for f in base con-ajuste resultado; do
+  echo "== $f"
+  grep -o 'result>[a-z]*<' /tmp/openscap-workshop/$f.xml 2>/dev/null | sort | uniq -c
+done
+----
+
+== 4. Si queda algo rojo
+
+. Partición o kernel: no se arregla en caliente.
+. `sshd`: revisa el drop-in y `sshd -T`.
+. Archivo huérfano: el fix pudo dejarlo. Revisa con `find`.
+
+[NOTE]
+====
+Cero fallas significa que la medición es consistente con la política, no que el
+sistema sea perfecto. Las excepciones firmadas son parte del resultado.
+====
+
+[.checkpoint]
+== Checkpoint
+
+Cero `fail` y las excepciones en `notselected`. Guarda el reporte: es la
+evidencia.

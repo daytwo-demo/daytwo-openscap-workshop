@@ -1,0 +1,12 @@
+name: modules
+title: OpenSCAP y CIS Workshop
+version: ~
+nav:
+  - modules/ROOT/nav.adoc
+
+asciidoc:
+  attributes:
+    experimental: true
+    page-pagination: true
+    source-language: bash
+    repo-url: https://github.com/daytwo-internal/daytwo-openscap-workshop

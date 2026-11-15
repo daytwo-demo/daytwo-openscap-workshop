@@ -1,0 +1,84 @@
+= CIS nivel 1 y 2
+:navtitle: CIS nivel 1 y 2
+
+CIS · Para entender qué te están pidiendo cuando dicen "pasar CIS" · Al
+terminar: sabes leer un control y qué significa cumplirlo.
+
+CIS publica benchmarks: documentos con recomendaciones de configuración. El de
+RHEL se lee en el WorkBench oficial, con una cuenta gratuita:
+https://workbench.cisecurity.org/
+
+== Cómo se lee un control
+
+Elige el benchmark de tu versión y abre una recomendación. Trae seis cosas:
+
+|===
+| Campo | Qué dice
+
+| Título e ID | `5.1.3 Disable SSH Root Login`
+| Nivel | 1 o 2, servidor o escritorio
+| Tipo | `Automated` o `Manual`
+| Audit | Cómo se comprueba
+| Remediation | Cómo se corrige
+| Referencias | NIST, PCI, etc.
+|===
+
+Ejemplo real: 5.1.3 es nivel 1, automatizado, y en OpenSCAP se mide con la regla
+`sshd_disable_root_login`.
+
+== Nivel 1 y nivel 2
+
+[mermaid]
+----
+flowchart LR
+  L1["Nivel 1<br/>todos los sistemas"] --> L2["Nivel 2<br/>alto valor<br/>+ defensa en profundidad"]
+----
+
+El nivel 2 hereda el nivel 1. No son benchmarks distintos.
+
+[mermaid]
+----
+xychart-beta
+  title "Controles CIS en RHEL"
+  x-axis ["9 L1", "9 +L2", "10 L1", "10 +L2"]
+  y-axis "Controles" 0 --> 340
+  bar [237, 300, 249, 329]
+----
+
+RHEL 9: 237 de nivel 1 y 63 más de nivel 2. RHEL 10: 249 y 80.
+
+== Qué significa pasar
+
+Pasar un control es que el sistema cumpla la recomendación y que la comprobación
+dé el resultado esperado. No es "ejecuté el comando": es "quedó así y puedo
+demostrarlo".
+
+[mermaid]
+----
+flowchart LR
+  C["Control 5.1.3"] --> R["Regla"]
+  R --> E["oscap"]
+  E --> P["pass"]
+----
+
+Un control puede tener varias reglas, y una regla puede cubrir varios controles.
+Por eso el reporte habla de reglas.
+
+== Los que no se automatizan
+
+CIS marca algunos controles como `Manual`: revisar que la política de
+contraseñas esté aprobada, que el acceso físico esté controlado. Esos no tienen
+regla en OpenSCAP y se evidencian con un procedimiento firmado. El escaneo no
+los mide.
+
+[WARNING]
+====
+Un reporte con 0 fallas y 9 excepciones justificadas es distinto de uno con 0
+fallas porque se excluyó todo. La diferencia es el registro de excepciones.
+====
+
+[.checkpoint]
+== Checkpoint
+
+Deberías poder abrir un control en el WorkBench y decir su nivel, si es
+automatizado o manual, y con qué regla se mide.

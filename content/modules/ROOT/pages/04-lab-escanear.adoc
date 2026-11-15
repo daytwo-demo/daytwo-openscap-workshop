@@ -1,0 +1,59 @@
+= Lab 1: escanear
+:navtitle: Lab 1: escanear
+
+Escanear · Para ver el estado real de una VM · Al terminar: tienes un reporte con
+pass, fail y no aplica.
+
+[mermaid]
+----
+flowchart LR
+  A["Verificar"] --> B["Escanear"] --> C["Leer"] --> D["Abrir reporte"]
+----
+
+== 1. Verificar el entorno
+
+[source,bash]
+----
+./scripts/00-entorno.sh
+----
+
+Debe mostrar la versión de RHEL, los paquetes y el datastream. Si falta algo:
+
+[source,bash]
+----
+sudo dnf install -y openscap-scanner openscap-utils scap-security-guide
+----
+
+== 2. Escanear
+
+[source,bash]
+----
+sudo ./scripts/02-escanear.sh
+----
+
+Tarda unos minutos. Imprime el resumen y las reglas que fallan.
+
+== 3. Leer el conteo
+
+[source,bash]
+----
+grep -o 'result>[a-z]*<' /tmp/openscap-workshop/base.xml | sort | uniq -c
+----
+
+En una RHEL 10.3 limpia: 284 pass, 9 fail, 31 no aplica, 749 fuera del perfil.
+Los números cambian según versión.
+
+== 4. Abrir el reporte
+
+[source,bash]
+----
+xdg-open /tmp/openscap-workshop/base.html
+----
+
+Busca una regla que falle y mira qué esperaba, qué encontró y cómo se corrige.
+
+[.checkpoint]
+== Checkpoint
+
+Tienes que ver más `pass` que `fail`, un HTML que abre y al menos una regla
+`notapplicable`. Si no, revisa el paso anterior.

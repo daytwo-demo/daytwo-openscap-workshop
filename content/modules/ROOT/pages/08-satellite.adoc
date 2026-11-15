@@ -1,0 +1,108 @@
+= Satellite
+:navtitle: Satellite
+
+Satellite · Para centralizar el escaneo y la remediación · Al terminar: sabes
+elegir entre REX y manual.
+
+[mermaid]
+----
+flowchart LR
+  S["Satellite"] --> C["Cliente en host"]
+  C --> E["Escaneo"]
+  E --> P["Proxy 9090"]
+  P --> S
+----
+
+El escaneo y el reporte son iguales con REX y sin REX. Cambia quién instala el
+cliente y quién dispara.
+
+== 1. Subir contenido y ajuste
+
+[source,bash]
+----
+hammer scap-content bulk-upload --type directory \
+  --directory /usr/share/xml/scap/ssg/content/ \
+  --organization "DayTwo" --location "Default Location"
+
+hammer tailoring-file create \
+  --name "DayTwo CIS L1" \
+  --scap-file daytwo-rhel10-tailoring.xml \
+  --organization "DayTwo" --location "Default Location"
+----
+
+== 2. Crear la política
+
+Con REX:
+
+[source,bash]
+----
+hammer policy create \
+  --name "DayTwo CIS L1 - RHEL 10" \
+  --scap-content-id <ID> \
+  --scap-content-profile-id <ID> \
+  --tailoring-file-id <ID> \
+  --deploy-by ansible \
+  --period weekly --weekday monday \
+  --hostgroup-ids <ID> \
+  --organization "DayTwo" --location "Default Location"
+----
+
+Sin REX: el mismo comando con `--deploy-by manual`.
+
+`--deploy-by` dice quién instala el cliente, no cómo se escanea.
+
+== 3. Escanear
+
+[cols="1,1"]
+|===
+| Con REX | Sin REX
+
+| El rol `theforeman.foreman_scap_client` se corre por REX.
+| El cliente se instala por imagen, AAP o a mano.
+
+| `hammer hostgroup ansible-roles play --name demo-rhel9`
+| `sudo foreman_scap_client 3`
+
+| Botón *Run OpenSCAP scan* para el momento.
+| El cron del host escanea solo.
+|===
+
+== 4. Remediar
+
+Con REX, desde el reporte: botón *Remediate* → *Run OpenSCAP remediation -
+Ansible*. O por CLI:
+
+[source,bash]
+----
+hammer job-invocation create \
+  --job-template "Run OpenSCAP remediation - Ansible" \
+  --search "name = demo-rhel9-1"
+----
+
+Sin REX, el reporte es la entrada para el otro equipo:
+
+[source,bash]
+----
+oscap xccdf generate fix --fix-type ansible \
+  --profile "$ID" --tailoring-file daytwo-rhel10-tailoring.xml \
+  -o fix.yml ssg-rhel10-ds.xml
+----
+
+Después se corre con AAP y se vuelve a escanear.
+
+[NOTE]
+====
+Excluir del fix no es excluir del reporte. Si `sshd` lo maneja otro equipo, el
+fix no lo toca, pero el reporte sí lo mide: es la evidencia.
+====
+
+== El detalle que muerde
+
+Al cambiar el datastream o el ajuste, cambia el hash del contenido. El host sigue
+apuntando al hash viejo hasta que se actualiza su `config.yaml`.
+
+[.checkpoint]
+== Checkpoint
+
+Deberías poder decir cuándo usar `--deploy-by ansible` y cuándo `manual`, y qué
+pasa con el hash si cambias el contenido.

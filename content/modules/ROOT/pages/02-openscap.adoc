@@ -1,0 +1,85 @@
+= OpenSCAP
+:navtitle: OpenSCAP
+
+OpenSCAP · Para entender el programa que hace el escaneo · Al terminar: sabes
+leer un reporte y generar un fix.
+
+OpenSCAP es la implementación de SCAP que viene en RHEL. Trae la librería, el
+motor y el comando `oscap`. Si SCAP es el examen, OpenSCAP es el corrector.
+
+== El flujo
+
+[mermaid]
+----
+flowchart LR
+  DS["Datastream<br/>ssg-rhel10-ds.xml"] --> P["Perfil<br/>cis_server_l1"]
+  P --> O["oscap eval"]
+  T["Tailoring<br/>opcional"] --> O
+  O --> R["Reporte<br/>XML + HTML"]
+----
+
+Sin tailoring se evalúa el perfil tal como viene. Con tailoring se evalúa un
+perfil derivado.
+
+== Las cuatro palabras
+
+. *Perfil*: una selección de reglas y valores. Ejemplo: `cis_server_l1`.
+. *Regla*: una verificación concreta. Ejemplo: `sshd_disable_root_login`.
+. *Ajuste*: un archivo aparte que crea un perfil derivado.
+. *Fix*: el código que corrige una regla. Bash, Ansible o Puppet.
+
+== Los tres comandos
+
+Ver qué trae el datastream:
+
+[source,bash]
+----
+oscap info /usr/share/xml/scap/ssg/content/ssg-rhel10-ds.xml
+----
+
+Escanear:
+
+[source,bash]
+----
+sudo oscap xccdf eval \
+  --profile xccdf_org.ssgproject.content_profile_cis_server_l1 \
+  --results resultado.xml --report resultado.html \
+  /usr/share/xml/scap/ssg/content/ssg-rhel10-ds.xml
+----
+
+Generar el fix:
+
+[source,bash]
+----
+oscap xccdf generate fix --fix-type bash \
+  --profile xccdf_org.ssgproject.content_profile_cis_server_l1 \
+  -o fix.sh /usr/share/xml/scap/ssg/content/ssg-rhel10-ds.xml
+----
+
+== Qué significa cada estado
+
+[mermaid]
+----
+flowchart TD
+  A["Regla"] --> B{"¿En el perfil?"}
+  B -- "No" --> C["notselected"]
+  B -- "Sí" --> D{"¿Aplica?"}
+  D -- "No" --> E["notapplicable"]
+  D -- "Sí" --> F{"¿Cumple?"}
+  F -- "Sí" --> G["pass"]
+  F -- "No" --> H["fail"]
+----
+
+`error` y `unknown` son los casos en que el chequeo no pudo decidir.
+
+== Lo que no hace
+
+. No aplica cambios salvo que uses `--remediate` o corras el fix generado.
+. No ejecuta scripts arbitrarios: para eso está SCE, con un motor aparte.
+. No le pregunta al servicio: mide archivos. `sshd -T` es otra cosa.
+
+[.checkpoint]
+== Checkpoint
+
+Deberías poder explicar por qué `generate fix` no cambia nada y por qué el
+tailoring obliga a usar otro ID de perfil.

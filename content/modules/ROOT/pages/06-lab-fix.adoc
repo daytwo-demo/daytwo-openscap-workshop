@@ -1,0 +1,52 @@
+= Lab 3: remediar
+:navtitle: Lab 3: remediar
+
+Remediar · Para corregir lo que falla · Al terminar: el sistema quedó con los
+cambios aplicados.
+
+[mermaid]
+----
+flowchart LR
+  G["generate fix"] --> F["fix.sh"]
+  F --> A["bash fix.sh"]
+  A --> V["Verificar"]
+----
+
+== 1. Generar el fix
+
+[source,bash]
+----
+sudo ./scripts/04-fix.sh
+----
+
+El script genera `/tmp/openscap-workshop/fix.sh` y pide confirmación.
+
+[WARNING]
+====
+`generate fix` solo escribe el archivo. No aplica nada. Y `bash fix.sh` toca
+`sshd`, PAM y `sudo`: corre desde la consola, con snapshot.
+====
+
+== 2. Aplicar
+
+Escribe `SI` cuando pregunte. O a mano:
+
+[source,bash]
+----
+sudo bash /tmp/openscap-workshop/fix.sh
+----
+
+== 3. Esperar
+
+Son cientos de reglas. Algunas instalan paquetes, otras recargan servicios.
+Puede tardar varios minutos.
+
+== Lo que no se arregla en caliente
+
+Particiones, GRUB y parámetros de kernel. Eso queda para el diseño del servidor.
+
+[.checkpoint]
+== Checkpoint
+
+El script termina sin error y `/tmp/openscap-workshop/fix.sh` existe. Si algo se
+cortó, revisa la última línea del log.
