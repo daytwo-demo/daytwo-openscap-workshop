@@ -287,7 +287,8 @@ Este workshop se queda en **quitar** controles. Las siguientes etapas:
 2. **Agregar controles propios**. Ahí sí entra el fork de ComplianceAsCode:
    una regla en YAML que usa una plantilla y se compila dentro del datastream.
 3. **Llevarlo a Satellite**: subir datastream + tailoring, crear la política y
-   dejar que Satellite programe y centralice los reportes.
+   dejar que Satellite programe y centralice los reportes. Pasos y mitigación
+   en [`docs/satellite.md`](docs/satellite.md).
 
 ---
 
@@ -296,6 +297,8 @@ Este workshop se queda en **quitar** controles. Las siguientes etapas:
 ```
 .
 ├── README.md
+├── docs/
+│   └── satellite.md         # escaneo y mitigación desde Satellite
 ├── scripts/
 │   ├── 00-entorno.sh        # verifica versión, paquetes y datastream
 │   ├── 01-instalar.sh       # instala (dnf o ISO local)
