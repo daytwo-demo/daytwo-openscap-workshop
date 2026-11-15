@@ -1,6 +1,6 @@
 site:
   title: OpenSCAP y CIS Workshop
-  url: https://daytwo-internal.github.io/daytwo-openscap-workshop
+  url: https://daytwo-demo.github.io/daytwo-openscap-workshop
   start_page: modules::index.adoc
 
 content:
